@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>E-Voting Pilkades Karang Mukti - Kec. Cipeundeuy, Kab. Subang</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono (untuk struk thermal) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        pilkades: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Pengaturan dasar untuk pengalaman Android Kiosk / Tablet Landscape */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4;
+            overflow-x: hidden;
+        }
+
+        /* Efek tombol taktil saat disentuh */
+        .btn-tactile {
+            transition: transform 0.08s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.08s ease;
+        }
+        .btn-tactile:active {
+            transform: scale(0.96);
+        }
+
+        /* Animasi kertas struk thermal keluar dari printer */
+        @keyframes printPaperSlide {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0.2;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0%);
+                opacity: 1;
+            }
+        }
+
+        .thermal-paper-animate {
+            animation: printPaperSlide 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* Gerigi kertas struk thermal */
+        .receipt-edge-bottom {
+            background: linear-gradient(-45deg, transparent 8px, #ffffff 8px), 
+                        linear-gradient(45deg, transparent 8px, #ffffff 8px);
+            background-repeat: repeat-x;
+            background-position: left bottom;
+            background-size: 16px 16px;
+        }
+
+        /* CSS Khusus Cetak Fisik ke Printer Thermal 58mm (RawBT / Bluetooth Print Service Android) */
+        @media print {
+            body * {
+                visibility: hidden !important;
+            }
+            #printable-thermal-receipt, #printable-thermal-receipt * {
+                visibility: visible !important;
+            }
+            #printable-thermal-receipt {
+                position: fixed !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 58mm !important;
+                margin: 0 !important;
+                padding: 4mm 2mm !important;
+                box-shadow: none !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                font-size: 11px !important;
+                animation: none !important;
+                transform: none !important;
+            }
+            @page {
+                size: 58mm auto;
+                margin: 0mm;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-800">
+
+    <!-- =====================================================================
+         HEADER RESMI PILKADES KARANG MUKTI (BAR HIJAU KHAS PEMILIHAN)
+         ===================================================================== -->
+    <header class="bg-gradient-to-r from-pilkades-900 via-pilkades-800 to-pilkades-700 text-white shadow-lg border-b-4 border-amber-400 px-4 py-2.5 sm:px-6">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Kiri: Logo Kabupaten Subang & Judul Resmi -->
+            <div class="flex items-center gap-3 sm:gap-4">
+                <!-- Logo SVG Kabupaten Subang (Perisai Khas Karya Utama Satya Negara) -->
+                <div class="w-12 h-14 sm:w-14 sm:h-16 bg-white/10 backdrop-blur-sm rounded-xl p-1.5 flex items-center justify-center border border-white/25 shadow-inner shrink-0">
+                    <svg viewBox="0 0 100 115" class="w-full h-full drop-shadow">
+                        <!-- Perisai Luar -->
+                        <path d="M10 10 H90 V55 C90 85 50 105 50 105 C50 105 10 85 10 55 Z" fill="#047857" stroke="#fbbf24" stroke-width="5"/>
+                        <!-- Bagian Atas Kuning Emas -->
+                        <path d="M13 13 H87 V42 H13 Z" fill="#f59e0b"/>
+                        <!-- Gunung Tangkuban Perahu / Bukit Subang -->
+                        <path d="M13 42 L35 24 L52 34 L70 20 L87 42 Z" fill="#065f46"/>
+                        <!-- Bintang Kejora -->
+                        <polygon points="50,14 52,20 58,20 53,24 55,30 50,26 45,30 47,24 42,20 48,20" fill="#fef08a"/>
+                        <!-- Gelombang Laut Pantura Subang -->
+                        <path d="M16 65 Q33 58 50 65 T84 65 V76 Q67 69 50 76 T16 76 Z" fill="#38bdf8"/>
+                        <!-- Padi & Kapas / Nanas Subang -->
+                        <circle cx="50" cy="53" r="8" fill="#fbbf24" stroke="#ffffff" stroke-width="1.5"/>
+                        <path d="M24 52 C20 68 30 84 46 92" fill="none" stroke="#fde047" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M76 52 C80 68 70 84 54 92" fill="none" stroke="#86efac" stroke-width="3.5" stroke-linecap="round"/>
+                        <!-- Pita Bawah -->
+                        <rect x="24" y="88" width="52" height="10" rx="3" fill="#ffffff"/>
+                        <text x="50" y="95.5" font-size="6.5" font-weight="900" text-anchor="middle" fill="#064e3b">KAB. SUBANG</text>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-amber-400 text-pilkades-950 text-[10px] sm:text-xs font-extrabold px-2 py-0.5 rounded uppercase tracking-wider">E-Voting Resmi</span>
+                        <span class="text-pilkades-100 text-xs sm:text-sm font-semibold hidden sm:inline">• TPS 001 DESA KARANG MUKTI</span>
+                    </div>
+                    <h1 class="text-base sm:text-xl md:text-2xl font-black tracking-tight leading-tight uppercase text-white">
+                        Pemilihan Kepala Desa Karang Mukti
+                    </h1>
+                    <p class="text-xs sm:text-sm text-pilkades-100 font-medium">
+                        Kecamatan Cipeundeuy, Kabupaten Subang, Provinsi Jawa Barat
+                    </p>
+                </div>
+            </div>
+
+            <!-- Kanan: Status Printer Bluetooth, Suara, Jam & Menu Panitia -->
+            <div class="flex items-center gap-2 sm:gap-3 ml-auto">
+                <!-- Tombol Koneksi Printer Mini Bluetooth -->
+                <button id="btn-bt-status" onclick="connectBluetoothPrinter()" class="btn-tactile flex items-center gap-2 bg-pilkades-950/60 hover:bg-pilkades-950 border border-pilkades-400/40 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition">
+                    <span id="bt-indicator-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <i class="fa-brands fa-bluetooth-b text-sky-300"></i>
+                    <span id="bt-status-text" class="hidden md:inline">Printer BT: Siap (Auto)</span>
+                </button>
+
+                <!-- Tombol Mute / Unmute Audio Sentuh -->
+                <button id="btn-audio-toggle" onclick="toggleAudio()" title="Suara Layar Sentuh" class="btn-tactile w-10 h-10 rounded-xl bg-white/15 hover:bg-white/25 border border-white/20 flex items-center justify-center text-white">
+                    <i id="audio-icon" class="fa-solid fa-volume-high text-base"></i>
+                </button>
+
+                <!-- Tombol Panel Panitia KPPS -->
+                <button onclick="openCommitteeModal()" title="Panel Panitia & Unggah Foto JPG" class="btn-tactile flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-pilkades-950 font-bold px-3 py-2 rounded-xl text-xs sm:text-sm shadow">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span class="hidden sm:inline">Panitia</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =====================================================================
+         KONTEN UTAMA (DINAMIS: LAYAR LOGIN NIK -> BILIK SUARA -> CETAK STRUK)
+         ===================================================================== -->
+    <main class="flex-1 flex items-center justify-center p-3 sm:p-5 max-w-7xl w-full mx-auto">
+
+        <!-- -----------------------------------------------------------------
+             SCREEN 1: LAYAR VERIFIKASI PEMILIH (INPUT NIK / NO. UNDANGAN)
+             Dioptimalkan untuk Android Landscape dengan Numpad Besar
+             ----------------------------------------------------------------- -->
+        <section id="screen-login" class="w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+            
+            <!-- Kolom Kiri (7 Kolom di Landscape): Instruksi & Kotak Input NIK / Undangan -->
+            <div class="lg:col-span-7 p-5 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-white via-pilkades-50/40 to-emerald-50/70 border-b lg:border-b-0 lg:border-r border-slate-200">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pilkades-100 text-pilkades-800 text-xs font-bold mb-3">
+                        <i class="fa-solid fa-id-card"></i>
+                        <span>TAHAP 1: VERIFIKASI HAK PILIH</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+                        Selamat Datang di Bilik Suara Digital
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-1.5">
+                        Silakan masukkan <strong>16 Digit NIK</strong> atau <strong>Nomor Undangan (C6)</strong> Anda menggunakan papan angka di samping untuk membuka Surat Suara.
+                    </p>
+
+                    <!-- Input Display Box -->
+                    <div class="mt-6">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="voter-id-input" class="text-xs font-bold uppercase tracking-wider text-pilkades-800">
+                                NIK / Nomor Undangan Pemilih
+                            </label>
+                            <span id="digit-counter" class="text-xs font-mono font-semibold text-slate-500">0 / 16 Digit</span>
+                        </div>
+                        
+                        <div class="relative flex items-center">
+                            <input 
+                                type="text" 
+                                id="voter-id-input" 
+                                readonly 
+                                placeholder="Contoh: 3213081205850001"
+                                class="w-full text-2xl sm:text-3xl font-mono font-bold tracking-widest text-pilkades-900 bg-white border-2 border-pilkades-600 focus:border-pilkades-700 rounded-2xl px-4 py-4 pr-14 shadow-inner outline-none"
+                            >
+                            <button onclick="clearInput()" title="Bersihkan" class="btn-tactile absolute right-3 w-10 h-10 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-500 hover:text-rose-600 flex items-center justify-center">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+
+                        <!-- Pesan Error / Status Validasi -->
+                        <div id="login-alert" class="hidden mt-3 p-3 rounded-xl text-sm font-semibold flex items-center gap-2"></div>
+                    </div>
+                </div>
+
+                <!-- Bagian Bawah Kiri: Tombol Demo Cepat & Info Waktu -->
+                <div class="mt-6 pt-4 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-semibold text-slate-500">Uji Coba Cepat:</span>
+                        <button onclick="fillDemoNIK()" class="btn-tactile text-xs font-bold bg-pilkades-100 hover:bg-pilkades-200 text-pilkades-800 px-3 py-1.5 rounded-lg border border-pilkades-300">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Isi NIK Otomatis
+                        </button>
+                        <button onclick="fillDemoUndangan()" class="btn-tactile text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg border border-amber-300">
+                            <i class="fa-solid fa-ticket mr-1"></i> No. Undangan C6
+                        </button>
+                    </div>
+                    <div class="text-xs font-mono text-slate-500" id="live-clock">
+                        --:--:-- WIB
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan (5 Kolom di Landscape): Keypad Numerik Layar Sentuh -->
+            <div class="lg:col-span-5 p-5 sm:p-6 bg-slate-50 flex flex-col justify-center">
+                <div class="grid grid-cols-3 gap-2.5 sm:gap-3">
+                    <button onclick="pressKey('1')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">1</button>
+                    <button onclick="pressKey('2')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">2</button>
+                    <button onclick="pressKey('3')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">3</button>
+                    
+                    <button onclick="pressKey('4')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">4</button>
+                    <button onclick="pressKey('5')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">5</button>
+                    <button onclick="pressKey('6')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">6</button>
+                    
+                    <button onclick="pressKey('7')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">7</button>
+                    <button onclick="pressKey('8')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">8</button>
+                    <button onclick="pressKey('9')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">9</button>
+                    
+                    <button onclick="clearInput()" class="btn-tactile h-14 sm:h-16 bg-rose-50 hover:bg-rose-100 text-rose-700 text-sm sm:text-base font-extrabold rounded-2xl shadow-sm border border-rose-200 uppercase">
+                        Reset
+                    </button>
+                    <button onclick="pressKey('0')" class="btn-tactile h-14 sm:h-16 bg-white hover:bg-pilkades-50 active:bg-pilkades-600 active:text-white text-slate-800 text-2xl font-extrabold rounded-2xl shadow-sm border border-slate-200">0</button>
+                    <button onclick="backspaceKey()" class="btn-tactile h-14 sm:h-16 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xl font-extrabold rounded-2xl shadow-sm border border-amber-200 flex items-center justify-center">
+                        <i class="fa-solid fa-delete-left"></i>
+                    </button>
+                </div>
+
+                <!-- Tombol Utama Masuk Bilik Suara -->
+                <button onclick="enterVotingBooth()" class="btn-tactile mt-4 w-full py-4 px-6 bg-gradient-to-r from-pilkades-700 to-pilkades-600 hover:from-pilkades-800 hover:to-pilkades-700 text-white font-black text-base sm:text-lg rounded-2xl shadow-lg shadow-pilkades-600/30 flex items-center justify-center gap-3 uppercase tracking-wide">
+                    <span>Masuk Bilik Suara</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket text-xl"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- -----------------------------------------------------------------
+             SCREEN 2: SURAT SUARA DIGITAL (BILIK PEMILIHAN - 2 CALON WANITA)
+             ----------------------------------------------------------------- -->
+        <section id="screen-ballot" class="hidden w-full flex-col gap-4">
+            <!-- Bar Identitas Surat Suara Berwarna Hijau -->
+            <div class="bg-pilkades-800 text-white rounded-2xl px-5 py-3 shadow-md flex flex-wrap items-center justify-between gap-2 border-b-4 border-pilkades-500">
+                <div class="flex items-center gap-3">
+                    <span class="bg-white text-pilkades-900 font-black px-3 py-1 rounded-lg text-xs sm:text-sm uppercase">Surat Suara Sah</span>
+                    <span class="font-bold text-sm sm:text-base">Pilih Salah Satu Calon Kepala Desa Karang Mukti</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs sm:text-sm">
+                    <span class="bg-pilkades-950/60 px-3 py-1 rounded-lg font-mono">Pemilih: <strong id="active-voter-display" class="text-amber-300">---</strong></span>
+                    <button onclick="cancelVoting()" class="btn-tactile bg-white/15 hover:bg-white/25 px-3 py-1 rounded-lg font-semibold">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Keluar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid 2 Kandidat Bersampingan (Calon 01 Diperbesar Dominan 8 Kolom, Calon 02 Diperkecil 4 Kolom dengan Foto 30%) -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-stretch">
+                
+                <!-- KARTU CALON NOMOR URUT 01: IBU TARSIH, S.Pd. (SANGAT BESAR - 8 KOLOM) -->
+                <div onclick="selectCandidate(1)" class="md:col-span-8 btn-tactile cursor-pointer group bg-white rounded-3xl shadow-2xl border-4 border-pilkades-600 ring-4 ring-pilkades-500/20 overflow-hidden flex flex-col justify-between transition-all">
+                    <!-- Header Nomor Urut Hijau -->
+                    <div class="bg-gradient-to-r from-pilkades-900 via-pilkades-700 to-pilkades-600 text-white px-6 py-4 flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <span class="bg-amber-400 text-pilkades-950 text-xs sm:text-sm font-black px-3 py-1 rounded-lg uppercase tracking-wide shadow-sm">Calon Utama</span>
+                            <span class="text-sm sm:text-base font-extrabold uppercase tracking-widest opacity-95">Kepala Desa</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs sm:text-sm font-bold uppercase">Nomor Urut</span>
+                            <span class="bg-white text-pilkades-900 font-black text-4xl sm:text-5xl w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shadow-lg">01</span>
+                        </div>
+                    </div>
+
+                    <!-- Foto Kandidat 01 JPG Sangat Besar & Menonjol -->
+                    <div class="p-6 sm:p-8 flex flex-col items-center justify-center bg-gradient-to-b from-pilkades-50/90 to-white flex-1">
+                        <div class="relative w-72 h-[380px] sm:w-80 sm:h-[440px] rounded-3xl overflow-hidden border-4 border-pilkades-700 shadow-2xl bg-red-700">
+                            <!-- Elemen IMG berformat JPG permanen -->
+                            <img id="img-candidate-1" src="unduhan/gambarcalon_1" alt="Calon 01 Ibu Tarsih, S.Pd." class="w-full h-full object-cover object-top">
+                            <div class="absolute bottom-0 inset-x-0 bg-pilkades-900/95 text-white text-sm font-extrabold text-center py-2 tracking-wider uppercase">
+                                Calon No. Urut 01
+                            </div>
+                        </div>
+
+                        <!-- Nama Lengkap Kandidat 01 -->
+                        <div class="mt-5 text-center">
+                            <h3 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                                Ibu Tarsih, S.Pd.
+                            </h3>
+                            <p class="text-base sm:text-lg font-bold text-pilkades-700 mt-1">
+                                Calon Kepala Desa Karang Mukti
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Coblos Hijau Besar -->
+                    <div class="p-6 pt-0">
+                        <button type="button" class="w-full py-5 sm:py-6 bg-gradient-to-r from-pilkades-700 via-pilkades-600 to-emerald-500 group-hover:from-pilkades-800 group-hover:to-pilkades-600 text-white font-black text-xl sm:text-2xl rounded-2xl shadow-xl shadow-pilkades-600/30 flex items-center justify-center gap-3 uppercase tracking-wider">
+                            <i class="fa-solid fa-check-to-slot text-3xl"></i>
+                            <span>Coblos / Pilih No. 01</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KARTU CALON NOMOR URUT 02: tanpa nama (DIPERKECIL 4 KOLOM, GAMBAR 30%) -->
+                <div onclick="selectCandidate(2)" class="md:col-span-4 btn-tactile cursor-pointer group bg-white rounded-3xl shadow-md border-2 border-slate-300 hover:border-pilkades-600 overflow-hidden flex flex-col justify-between transition-all my-auto">
+                    <!-- Header Nomor Urut -->
+                    <div class="bg-gradient-to-r from-slate-700 to-slate-600 group-hover:from-pilkades-800 group-hover:to-pilkades-600 text-white px-4 py-2.5 flex items-center justify-between transition-colors">
+                        <span class="text-xs font-bold uppercase tracking-wider opacity-90">Calon Kades</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] font-bold uppercase">No. Urut</span>
+                            <span class="bg-white text-slate-900 font-black text-xl w-9 h-9 rounded-xl flex items-center justify-center shadow">02</span>
+                        </div>
+                    </div>
+
+                    <!-- Foto Kandidat 02 Diperkecil hingga 30% dari skala Calon 01 -->
+                    <div class="p-4 flex flex-col items-center justify-center bg-gradient-to-b from-slate-50 to-white flex-1">
+                        <div class="relative w-24 h-[132px] sm:w-28 sm:h-[140px] rounded-xl overflow-hidden border-2 border-slate-400 group-hover:border-pilkades-600 shadow bg-slate-200">
+                            <!-- Elemen IMG berformat JPG permanen -->
+                            <img id="img-candidate-2" src="" alt="Calon 02 tanpa nama" class="w-full h-full object-cover object-top">
+                            <div class="absolute bottom-0 inset-x-0 bg-slate-800/85 text-white text-[9px] font-bold text-center py-0.5 tracking-wider uppercase">
+                                No. 02
+                            </div>
+                        </div>
+
+                        <!-- Nama Kandidat 02 -->
+                        <div class="mt-3 text-center">
+                            <h3 class="text-base sm:text-lg font-black text-slate-800 tracking-tight">
+                                tanpa nama
+                            </h3>
+                            <p class="text-[11px] font-semibold text-slate-500 mt-0.5">
+                                Calon Kepala Desa Karang Mukti
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tombol Coblos -->
+                    <div class="p-4 pt-0">
+                        <button type="button" class="w-full py-3 bg-slate-700 group-hover:bg-pilkades-600 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow flex items-center justify-center gap-2 uppercase tracking-wider transition-colors">
+                            <i class="fa-solid fa-check-to-slot text-base"></i>
+                            <span>Coblos / Pilih No. 02</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- -----------------------------------------------------------------
+             SCREEN 3: CETAK OTOMATIS STRUK THERMAL BLUETOOTH & SELESAI
+             ----------------------------------------------------------------- -->
+        <section id="screen-receipt" class="hidden w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden grid-cols-1 lg:grid-cols-12">
+            
+            <!-- Kolom Kiri (6 Kolom): Status Suara Sah & Kontrol Printer Bluetooth -->
+            <div class="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-pilkades-50 via-white to-emerald-50 border-b lg:border-b-0 lg:border-r border-slate-200">
+                <div>
+                    <div class="w-16 h-16 rounded-2xl bg-pilkades-600 text-white flex items-center justify-center text-3xl shadow-lg shadow-pilkades-600/30 mb-4">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-pilkades-900">
+                        Suara Anda Telah Sah Tercatat!
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2">
+                        Terima kasih telah berpartisipasi dalam Pemilihan Kepala Desa <strong>Karang Mukti</strong>, Kecamatan Cipeundeuy, Kabupaten Subang.
+                    </p>
+
+                    <!-- Status Proses Cetak Otomatis -->
+                    <div id="print-status-box" class="mt-5 p-4 rounded-2xl bg-white border-2 border-pilkades-500 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div id="print-spinner" class="w-8 h-8 rounded-full bg-pilkades-100 text-pilkades-700 flex items-center justify-center animate-spin">
+                                <i class="fa-solid fa-gear"></i>
+                            </div>
+                            <div>
+                                <div id="print-status-title" class="font-bold text-pilkades-900 text-sm sm:text-base">
+                                    Mencetak Bukti Pilih ke Printer Mini Bluetooth...
+                                </div>
+                                <div id="print-status-desc" class="text-xs text-slate-500">
+                                    Mengirim perintah ESC/POS 58mm otomatis
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi Bawah -->
+                <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                    <button onclick="triggerThermalPrint(true)" class="btn-tactile flex-1 py-3.5 px-4 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-2xl text-sm flex items-center justify-center gap-2 shadow">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Cetak Ulang Struk</span>
+                    </button>
+                    <button onclick="finishAndNextVoter()" class="btn-tactile flex-1 py-3.5 px-4 bg-pilkades-700 hover:bg-pilkades-800 text-white font-black rounded-2xl text-sm flex items-center justify-center gap-2 shadow-lg">
+                        <span>Pemilih Berikutnya</span>
+                        <i class="fa-solid fa-forward"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan (6 Kolom): Simulasi Visual Printer Mini Bluetooth 58mm -->
+            <div class="lg:col-span-6 p-6 bg-slate-800 flex flex-col items-center justify-center relative overflow-hidden">
+                <div class="text-xs font-mono text-slate-300 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i class="fa-brands fa-bluetooth text-sky-400"></i>
+                    <span>Mini Thermal Printer 58mm (Auto-Print)</span>
+                </div>
+
+                <!-- Bodi Mulut Printer Mini Bluetooth -->
+                <div class="w-72 sm:w-80 bg-slate-900 rounded-t-2xl p-3 border-x-4 border-t-4 border-slate-700 shadow-2xl z-10">
+                    <div class="flex items-center justify-between px-2 mb-2">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span class="text-[10px] font-mono text-emerald-400 font-bold">PRINTING...</span>
+                        </div>
+                        <span class="text-[10px] font-mono text-slate-400">POS-58BT</span>
+                    </div>
+                    <!-- Celah Kertas Keluar -->
+                    <div class="h-3 bg-black rounded-full shadow-inner border border-slate-700"></div>
+                </div>
+
+                <!-- Kertas Struk Thermal 58mm yang Keluar -->
+                <div class="w-64 sm:w-72 overflow-hidden -mt-1.5 z-0">
+                    <div id="printable-thermal-receipt" class="thermal-paper-animate bg-white text-slate-900 font-mono text-xs p-4 pb-6 shadow-xl receipt-edge-bottom">
+                        <div class="text-center border-b border-dashed border-slate-400 pb-2.5">
+                            <div class="font-bold text-sm uppercase">PANITIA PILKADES</div>
+                            <div class="font-bold text-xs">DESA KARANG MUKTI</div>
+                            <div class="text-[10px] text-slate-600">Kec. Cipeundeuy, Kab. Subang</div>
+                            <div class="text-[10px] text-slate-600">Provinsi Jawa Barat</div>
+                        </div>
+
+                        <div class="py-2.5 border-b border-dashed border-slate-400 space-y-1 text-[11px]">
+                            <div class="flex justify-between">
+                                <span>TPS</span>
+                                <span class="font-bold">: 001 KARANG MUKTI</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>WAKTU</span>
+                                <span id="receipt-time" class="font-bold">: --/--/---- --:--</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>ID PEMILIH</span>
+                                <span id="receipt-voter" class="font-bold">: 3213********001</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>NO. RESI</span>
+                                <span id="receipt-hash" class="font-bold">: #KM-0000</span>
+                            </div>
+                        </div>
+
+                        <div class="py-3 text-center border-b border-dashed border-slate-400">
+                            <div class="text-[10px] uppercase text-slate-500">Status Pemilihan</div>
+                            <div class="font-black text-sm mt-0.5 tracking-wide border border-slate-900 py-1 px-2 inline-block">
+                                SUARA SAH TERCATAT
+                            </div>
+                            <div id="receipt-choice-label" class="text-[11px] font-bold mt-1.5 text-slate-800">
+                                Pilihan: Calon No. Urut --
+                            </div>
+                        </div>
+
+                        <!-- QR Code Verifikasi SVG -->
+                        <div class="pt-3 flex flex-col items-center">
+                            <svg id="receipt-qr-svg" viewBox="0 0 100 100" class="w-20 h-20 border border-slate-300 p-1">
+                                <!-- Diisi dinamis via JS -->
+                            </svg>
+                            <span class="text-[9px] text-slate-500 mt-1.5 text-center">
+                                Bukti sah telah menggunakan hak pilih.<br>Simpan struk ini sebagai tanda bukti.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================================
+         MODAL 1: KONFIRMASI PILIHAN KANDIDAT (MENCEGAH SALAH SENTUH)
+         ===================================================================== -->
+    <div id="modal-confirm" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border-2 border-pilkades-600 animate-[fadeIn_0.15s_ease-out]">
+            <div class="bg-pilkades-800 text-white px-6 py-4 text-center">
+                <span class="text-xs font-bold uppercase tracking-widest text-pilkades-200">Konfirmasi Surat Suara</span>
+                <h3 class="text-xl font-black mt-0.5">Apakah Pilihan Anda Sudah Benar?</h3>
+            </div>
+            
+            <div class="p-6 flex flex-col items-center text-center">
+                <div class="relative w-32 h-36 rounded-2xl overflow-hidden border-4 border-pilkades-600 shadow-md mb-3">
+                    <img id="confirm-candidate-img" src="" alt="Foto Kandidat" class="w-full h-full object-cover object-top">
+                    <span id="confirm-candidate-num" class="absolute top-2 right-2 bg-pilkades-800 text-white font-black text-sm px-2.5 py-1 rounded-lg shadow">01</span>
+                </div>
+                <div class="text-xs font-bold text-pilkades-700 uppercase">Anda Memilih Calon Nomor Urut <span id="confirm-num-text">01</span></div>
+                <div id="confirm-candidate-name" class="text-2xl font-black text-slate-900 mt-1">Ibu Tarsih, S.Pd.</div>
+                <p class="text-xs text-slate-500 mt-2">
+                    Setelah menekan tombol <strong>YA, SAHKAN PILIHAN</strong>, suara tidak dapat diubah dan struk bukti akan otomatis dicetak.
+                </p>
+
+                <div class="grid grid-cols-2 gap-3 w-full mt-6">
+                    <button onclick="closeConfirmModal()" class="btn-tactile py-3.5 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm">
+                        <i class="fa-solid fa-xmark mr-1"></i> Batal
+                    </button>
+                    <button onclick="confirmVoteAndPrint()" class="btn-tactile py-3.5 px-4 rounded-2xl bg-pilkades-600 hover:bg-pilkades-700 text-white font-black text-sm shadow-lg shadow-pilkades-600/30">
+                        <i class="fa-solid fa-check mr-1"></i> YA, SAHKAN
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         MODAL 2: PANEL PANITIA KPPS (UNGGAH FOTO JPG REFERENSI 1 & 2, REKAP)
+         ===================================================================== -->
+    <div id="modal-committee" class="hidden fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 my-auto">
+            <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-user-shield text-amber-400 text-lg"></i>
+                    <div>
+                        <h3 class="font-black text-base sm:text-lg">Panel Panitia KPPS Desa Karang Mukti</h3>
+                        <p class="text-xs text-slate-400">Pengaturan Foto Kandidat (.JPG), Printer Bluetooth & Rekapitulasi</p>
+                    </div>
+                </div>
+                <button onclick="closeCommitteeModal()" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Bagian 1: Unggah Foto Referensi JPG Kandidat 1 & 2 (Permanen setelah 1x diganti) -->
+                <div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <h4 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-image text-pilkades-600"></i>
+                            <span>Foto Surat Suara Kandidat (Permanen Setelah 1x Diganti)</span>
+                        </h4>
+                        <span class="text-[11px] font-bold bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                            <i class="fa-solid fa-shield-halved"></i> Kunci Otomatis 1x Ubah
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Upload Foto Calon 01 -->
+                        <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 flex items-center gap-3">
+                            <img id="preview-admin-1" src="" class="w-16 h-20 rounded-xl object-cover border-2 border-pilkades-600 bg-white shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="text-xs font-bold text-pilkades-800">Calon No. 01 (Besar)</div>
+                                <div class="text-sm font-black text-slate-900 truncate">Ibu Tarsih, S.Pd.</div>
+                                <div id="upload-control-1" class="mt-2">
+                                    <label class="btn-tactile inline-flex items-center gap-1.5 bg-pilkades-700 hover:bg-pilkades-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer shadow-sm">
+                                        <i class="fa-solid fa-upload"></i>
+                                        <span>Ganti Foto (1x)</span>
+                                        <input id="input-photo-1" type="file" accept="image/jpeg,image/jpg,image/png" onchange="handleCandidatePhotoUpload(1, event)" class="hidden">
+                                    </label>
+                                </div>
+                                <div id="locked-badge-1" class="hidden mt-2 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg leading-tight">
+                                    <i class="fa-solid fa-lock mr-1"></i> Foto Terkunci Permanen
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Foto Calon 02 -->
+                        <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 flex items-center gap-3">
+                            <img id="preview-admin-2" src="" class="w-12 h-14 rounded-xl object-cover border-2 border-slate-400 bg-white shrink-0">
+                            <div class="flex-1 min-w-0">
+                                <div class="text-xs font-bold text-slate-600">Calon No. 02 (30%)</div>
+                                <div class="text-sm font-black text-slate-900 truncate">Bapak H. Ahmad Sudrajat</div>
+                                <div id="upload-control-2" class="mt-2">
+                                    <label class="btn-tactile inline-flex items-center gap-1.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer shadow-sm">
+                                        <i class="fa-solid fa-upload"></i>
+                                        <span>Ganti Foto (1x)</span>
+                                        <input id="input-photo-2" type="file" accept="image/jpeg,image/jpg,image/png" onchange="handleCandidatePhotoUpload(2, event)" class="hidden">
+                                    </label>
+                                </div>
+                                <div id="locked-badge-2" class="hidden mt-2 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded-lg leading-tight">
+                                    <i class="fa-solid fa-lock mr-1"></i> Foto Terkunci Permanen
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 2: Rekapitulasi Perolehan Suara Sementara -->
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-pilkades-600"></i>
+                            <span>Perolehan Suara TPS 001</span>
+                        </h4>
+                        <span class="text-xs font-bold bg-pilkades-100 text-pilkades-800 px-2.5 py-1 rounded-lg">
+                            Total Suara Masuk: <span id="admin-total-votes">0</span>
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-pilkades-50 border border-pilkades-200">
+                            <div class="text-xs font-bold text-pilkades-800">01. Ibu Tarsih, S.Pd.</div>
+                            <div id="admin-votes-1" class="text-3xl font-black text-pilkades-900 mt-1">0</div>
+                            <div id="admin-pct-1" class="text-xs font-semibold text-pilkades-700 mt-0.5">0%</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-100 border border-slate-200">
+                            <div class="text-xs font-bold text-slate-700">02. Bapak H. Ahmad Sudrajat</div>
+                            <div id="admin-votes-2" class="text-3xl font-black text-slate-900 mt-1">0</div>
+                            <div id="admin-pct-2" class="text-xs font-semibold text-slate-600 mt-0.5">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian 3: Pengaturan Printer Bluetooth & Reset Simulasi -->
+                <div class="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                    <button onclick="connectBluetoothPrinter()" class="btn-tactile bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2">
+                        <i class="fa-brands fa-bluetooth-b"></i>
+                        <span>Hubungkan Printer Bluetooth (Web BT)</span>
+                    </button>
+
+                    <button onclick="resetAllElectionData()" class="btn-tactile bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Reset Data Simulasi</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         FOOTER STATUS KIOSK ANDROID
+         ===================================================================== -->
+    <footer class="bg-white border-t border-slate-200 px-4 py-2 text-[11px] sm:text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
+        <div>
+            <strong>Sistem E-Voting Pilkades</strong> • Desa Karang Mukti, Kec. Cipeundeuy, Kab. Subang, Jawa Barat
+        </div>
+        <div class="flex items-center gap-3">
+            <span>Mode: <strong>Android Landscape Kiosk</strong></span>
+            <span class="text-pilkades-700 font-semibold"><i class="fa-solid fa-shield-halved"></i> Terenkripsi & Offline-Ready</span>
+        </div>
+    </footer>
+
+    <!-- =====================================================================
+         JAVASCRIPT LOGIKA APLIKASI, WEB AUDIO API, & PRINTER THERMAL BLUETOOTH
+         ===================================================================== -->
+    <script>
+        /* ---------------------------------------------------------------------
+           1. STATE APLIKASI & DATA KANDIDAT
+           --------------------------------------------------------------------- */
+        const state = {
+            currentInput: '',
+            activeVoterId: '',
+            selectedCandidate: null,
+            audioEnabled: true,
+            btCharacteristic: null, // Menyimpan karakteristik Web Bluetooth printer jika terhubung
+            btDeviceName: '',
+            votes: { 1: 0, 2: 0 },
+            usedVoters: new Set(),
+            candidates: {
+                1: {
+                    number: '01',
+                    name: 'Ibu Tarsih, S.Pd.',
+                    subtitle: 'Calon Kepala Desa Karang Mukti',
+                    photoJpg: '' // Akan diisi dataURL berformat image/jpeg
+                },
+                2: {
+                    number: '02',
+                    name: 'Bapak H. Ahmad Sudrajat',
+                    subtitle: 'Calon Kepala Desa Karang Mukti',
+                    photoJpg: '' // Akan diisi dataURL berformat image/jpeg
+                }
+            }
+        };
+
+        /* ---------------------------------------------------------------------
+           2. GENERATOR & PENYIMPANAN PERMANEN FOTO KANDIDAT FORMAT .JPG
+              Foto otomatis dimuat dari penyimpanan permanen (localStorage) dan
+              dikunci permanen (photoLocked_1 & photoLocked_2) tepat setelah 1x diganti.
+           --------------------------------------------------------------------- */
+        const STORAGE_PHOTO_KEY_1 = 'pilkades_karang_mukti_permanent_photo_1_jpg';
+        const STORAGE_PHOTO_KEY_2 = 'pilkades_karang_mukti_permanent_photo_2_jpg';
+        const STORAGE_LOCK_KEY_1 = 'photoLocked_1';
+        const STORAGE_LOCK_KEY_2 = 'photoLocked_2';
+
+        function isCandidatePhotoLocked(candidateNum) {
+            const key = candidateNum === 1 ? STORAGE_LOCK_KEY_1 : STORAGE_LOCK_KEY_2;
+            return localStorage.getItem(key) === 'true';
+        }
+
+        function updatePhotoLockUI() {
+            [1, 2].forEach((num) => {
+                const locked = isCandidatePhotoLocked(num);
+                const controlEl = document.getElementById(`upload-control-${num}`);
+                const badgeEl = document.getElementById(`locked-badge-${num}`);
+                const inputEl = document.getElementById(`input-photo-${num}`);
+
+                if (locked) {
+                    if (controlEl) controlEl.classList.add('hidden');
+                    if (badgeEl) badgeEl.classList.remove('hidden');
+                    if (inputEl) inputEl.disabled = true;
+                } else {
+                    if (controlEl) controlEl.classList.remove('hidden');
+                    if (badgeEl) badgeEl.classList.add('hidden');
+                    if (inputEl) inputEl.disabled = false;
+                }
+            });
+        }
+
+        function createDefaultPortraitJpg(candidateNum) {
+            const w = candidateNum === 1 ? 480 : 320;
+            const h = candidateNum === 1 ? 560 : 380;
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+
+            // Latar belakang resmi merah/hijau
+            const grad = ctx.createLinearGradient(0, 0, 0, h);
+            if (candidateNum === 1) {
+                grad.addColorStop(0, '#b91c1c');
+                grad.addColorStop(1, '#7f1d1d');
+            } else {
+                grad.addColorStop(0, '#1e3a8a');
+                grad.addColorStop(1, '#1e293b');
+            }
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            // Siluet potret resmi calon
+            ctx.fillStyle = '#fde68a';
+            ctx.beginPath();
+            ctx.arc(w / 2, h * 0.34, w * 0.17, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pakaian / Kebaya atau Jas Resmi
+            ctx.fillStyle = candidateNum === 1 ? '#065f46' : '#0f172a';
+            ctx.beginPath();
+            ctx.ellipse(w / 2, h * 0.82, w * 0.36, h * 0.32, 0, Math.PI, 0, false);
+            ctx.fill();
+
+            // Kerudung / Peci
+            if (candidateNum === 1) {
+                ctx.strokeStyle = '#fef3c7';
+                ctx.lineWidth = w * 0.045;
+                ctx.beginPath();
+                ctx.arc(w / 2, h * 0.36, w * 0.19, Math.PI * 0.85, Math.PI * 0.15, false);
+                ctx.stroke();
+            } else {
+                ctx.fillStyle = '#090d16';
+                ctx.fillRect(w * 0.34, h * 0.14, w * 0.32, h * 0.09);
+            }
+
+            return canvas.toDataURL('image/jpeg', 0.92);
+        }
+
+        function loadOrGeneratePermanentPortraits() {
+            const savedPhoto1 = localStorage.getItem(STORAGE_PHOTO_KEY_1);
+            const savedPhoto2 = localStorage.getItem(STORAGE_PHOTO_KEY_2);
+
+            if (savedPhoto1) {
+                state.candidates[1].photoJpg = savedPhoto1;
+            } else {
+                state.candidates[1].photoJpg = createDefaultPortraitJpg(1);
+                try {
+                    localStorage.setItem(STORAGE_PHOTO_KEY_1, state.candidates[1].photoJpg);
+                } catch (e) {}
+            }
+
+            if (savedPhoto2) {
+                state.candidates[2].photoJpg = savedPhoto2;
+            } else {
+                state.candidates[2].photoJpg = createDefaultPortraitJpg(2);
+                try {
+                    localStorage.setItem(STORAGE_PHOTO_KEY_2, state.candidates[2].photoJpg);
+                } catch (e) {}
+            }
+
+            applyCandidatePhotosToUI();
+            updatePhotoLockUI();
+        }
+
+        function applyCandidatePhotosToUI() {
+            const img1 = document.getElementById('img-candidate-1');
+            const img2 = document.getElementById('img-candidate-2');
+            const prev1 = document.getElementById('preview-admin-1');
+            const prev2 = document.getElementById('preview-admin-2');
+
+            if (img1 && state.candidates[1].photoJpg) img1.src = state.candidates[1].photoJpg;
+            if (img2 && state.candidates[2].photoJpg) img2.src = state.candidates[2].photoJpg;
+            if (prev1 && state.candidates[1].photoJpg) prev1.src = state.candidates[1].photoJpg;
+            if (prev2 && state.candidates[2].photoJpg) prev2.src = state.candidates[2].photoJpg;
+        }
+
+        function handleCandidatePhotoUpload(candidateNum, event) {
+            if (isCandidatePhotoLocked(candidateNum)) {
+                playTone('error');
+                updatePhotoLockUI();
+                return;
+            }
+
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.onload = function () {
+                    // Kompresi & konversi ke JPG berkualitas tinggi agar ringan di localStorage
+                    const maxW = candidateNum === 1 ? 640 : 320;
+                    const scale = Math.min(1, maxW / img.width);
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                    state.candidates[candidateNum].photoJpg = jpgDataUrl;
+
+                    const photoKey = candidateNum === 1 ? STORAGE_PHOTO_KEY_1 : STORAGE_PHOTO_KEY_2;
+                    const lockKey = candidateNum === 1 ? STORAGE_LOCK_KEY_1 : STORAGE_LOCK_KEY_2;
+
+                    try {
+                        localStorage.setItem(photoKey, jpgDataUrl);
+                        localStorage.setItem(lockKey, 'true');
+                    } catch (err) {
+                        console.warn('Penyimpanan lokal penuh:', err);
+                    }
+
+                    applyCandidatePhotosToUI();
+                    updatePhotoLockUI();
+                    playTone('success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /* ---------------------------------------------------------------------
+           3. EFEK SUARA SENTUH (WEB AUDIO API - TANPA FILE EKSTERNAL)
+           --------------------------------------------------------------------- */
+        let audioCtx = null;
+
+        function playTone(type = 'tap') {
+            if (!state.audioEnabled) return;
+            try {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContextClass();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+                if (type === 'tap') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(680, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+                } else if (type === 'success') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.08);
+                    osc.frequency.setValueAtTime(783.99, now + 0.16);
+                    gain.gain.setValueAtTime(0.14, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(175, now + 0.12);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                }
+            } catch (e) {
+                // Abaikan jika browser membatasi audio sebelum interaksi
+            }
+        }
+
+        function toggleAudio() {
+            state.audioEnabled = !state.audioEnabled;
+            const icon = document.getElementById('audio-icon');
+            if (icon) {
+                icon.className = state.audioEnabled
+                    ? 'fa-solid fa-volume-high text-base'
+                    : 'fa-solid fa-volume-xmark text-base text-rose-300';
+            }
+            if (state.audioEnabled) playTone('tap');
+        }
+
+        /* ---------------------------------------------------------------------
+           4. LOGIKA LAYAR LOGIN & KEYPAD NUMERIK PEMILIH
+           --------------------------------------------------------------------- */
+        function updateInputDisplay() {
+            const inputEl = document.getElementById('voter-id-input');
+            const counterEl = document.getElementById('digit-counter');
+            if (inputEl) inputEl.value = state.currentInput;
+            if (counterEl) counterEl.textContent = `${state.currentInput.length} / 16 Digit`;
+        }
+
+        function showLoginAlert(message, isError = true) {
+            const alertEl = document.getElementById('login-alert');
+            if (!alertEl) return;
+            alertEl.textContent = message;
+            alertEl.className = isError
+                ? 'mt-3 p-3 rounded-xl text-sm font-semibold flex items-center gap-2 bg-rose-50 text-rose-800 border border-rose-200'
+                : 'mt-3 p-3 rounded-xl text-sm font-semibold flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200';
+            alertEl.classList.remove('hidden');
+        }
+
+        function hideLoginAlert() {
+            const alertEl = document.getElementById('login-alert');
+            if (alertEl) alertEl.classList.add('hidden');
+        }
+
+        function pressKey(digit) {
+            playTone('tap');
+            hideLoginAlert();
+            if (state.currentInput.length < 16) {
+                state.currentInput += digit;
+                updateInputDisplay();
+            }
+        }
+
+        function backspaceKey() {
+            playTone('tap');
+            hideLoginAlert();
+            state.currentInput = state.currentInput.slice(0, -1);
+            updateInputDisplay();
+        }
+
+        function clearInput() {
+            playTone('tap');
+            hideLoginAlert();
+            state.currentInput = '';
+            updateInputDisplay();
+        }
+
+        function fillDemoNIK() {
+            playTone('tap');
+            hideLoginAlert();
+            const rand4 = Math.floor(1000 + Math.random() * 9000);
+            state.currentInput = `321308120585${rand4}`;
+            updateInputDisplay();
+        }
+
+        function fillDemoUndangan() {
+            playTone('tap');
+            hideLoginAlert();
+            const rand3 = Math.floor(100 + Math.random() * 900);
+            state.currentInput = `0010${rand3}`;
+            updateInputDisplay();
+        }
+
+        function switchScreen(screenId) {
+            const screens = ['screen-login', 'screen-ballot', 'screen-receipt'];
+            screens.forEach((id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (id === screenId) {
+                    el.classList.remove('hidden');
+                    if (id === 'screen-ballot') el.classList.add('flex');
+                    if (id === 'screen-receipt') el.classList.add('grid');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex', 'grid');
+                }
+            });
+        }
+
+        function enterVotingBooth() {
+            const idVal = state.currentInput.trim();
+            if (idVal.length < 6) {
+                playTone('error');
+                showLoginAlert('Masukkan minimal 6 digit Nomor Undangan (C6) atau 16 digit NIK yang sah.');
+                return;
+            }
+            if (state.usedVoters.has(idVal)) {
+                playTone('error');
+                showLoginAlert(`NIK / Nomor Undangan (${idVal}) sudah digunakan untuk memilih!`);
+                return;
+            }
+
+            playTone('success');
+            state.activeVoterId = idVal;
+            const activeDisplay = document.getElementById('active-voter-display');
+            if (activeDisplay) activeDisplay.textContent = maskVoterId(idVal);
+            switchScreen('screen-ballot');
+        }
+
+        function cancelVoting() {
+            playTone('tap');
+            state.activeVoterId = '';
+            state.selectedCandidate = null;
+            switchScreen('screen-login');
+        }
+
+        function maskVoterId(id) {
+            if (id.length <= 6) return id;
+            return id.slice(0, 4) + '********' + id.slice(-3);
+        }
+
+        /* ---------------------------------------------------------------------
+           5. PEMILIHAN KANDIDAT & MODAL KONFIRMASI
+           --------------------------------------------------------------------- */
+        function selectCandidate(candidateNum) {
+            playTone('tap');
+            state.selectedCandidate = candidateNum;
+            const cand = state.candidates[candidateNum];
+
+            document.getElementById('confirm-candidate-img').src = cand.photoJpg;
+            document.getElementById('confirm-candidate-num').textContent = cand.number;
+            document.getElementById('confirm-num-text').textContent = cand.number;
+            document.getElementById('confirm-candidate-name').textContent = cand.name;
+
+            document.getElementById('modal-confirm').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            playTone('tap');
+            document.getElementById('modal-confirm').classList.add('hidden');
+        }
+
+        function confirmVoteAndPrint() {
+            const candNum = state.selectedCandidate;
+            if (!candNum) return;
+
+            closeConfirmModal();
+            playTone('success');
+
+            // Catat suara & tandai hak pilih sudah digunakan
+            state.votes[candNum] = (state.votes[candNum] || 0) + 1;
+            if (state.activeVoterId) {
+                state.usedVoters.add(state.activeVoterId);
+            }
+            saveElectionTallies();
+
+            // Siapkan data struk thermal 58mm
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            const timeStr = `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const receiptHash = `#KM-${Math.floor(1000 + Math.random() * 9000)}`;
+            const cand = state.candidates[candNum];
+
+            document.getElementById('receipt-time').textContent = `: ${timeStr}`;
+            document.getElementById('receipt-voter').textContent = `: ${maskVoterId(state.activeVoterId)}`;
+            document.getElementById('receipt-hash').textContent = `: ${receiptHash}`;
+            document.getElementById('receipt-choice-label').textContent = `Pilihan: No. Urut ${cand.number} (${cand.name})`;
+
+            renderReceiptQrSvg(receiptHash + '-' + cand.number);
+
+            // Reset animasi kertas struk
+            const paper = document.getElementById('printable-thermal-receipt');
+            paper.classList.remove('thermal-paper-animate');
+            void paper.offsetWidth;
+            paper.classList.add('thermal-paper-animate');
+
+            switchScreen('screen-receipt');
+            triggerThermalPrint(false);
+        }
+
+        function renderReceiptQrSvg(seedText) {
+            const svg = document.getElementById('receipt-qr-svg');
+            if (!svg) return;
+            let hash = 0;
+            for (let i = 0; i < seedText.length; i++) {
+                hash = (hash << 5) - hash + seedText.charCodeAt(i);
+                hash |= 0;
+            }
+            let rects = '';
+            for (let r = 0; r < 10; r++) {
+                for (let c = 0; c < 10; c++) {
+                    const isFinder = (r < 3 && c < 3) || (r < 3 && c > 6) || (r > 6 && c < 3);
+                    const bit = ((Math.abs(hash + r * 31 + c * 17) % 3) === 0);
+                    if (isFinder || bit) {
+                        rects += `<rect x="${c * 10}" y="${r * 10}" width="9" height="9" fill="#0f172a"/>`;
+                    }
+                }
+            }
+            svg.innerHTML = rects;
+        }
+
+        /* ---------------------------------------------------------------------
+           6. CETAK STRUK THERMAL BLUETOOTH (ESC/POS + DIALOG PRINT)
+           --------------------------------------------------------------------- */
+        async function connectBluetoothPrinter() {
+            playTone('tap');
+            const statusText = document.getElementById('bt-status-text');
+            if (!navigator.bluetooth) {
+                if (statusText) statusText.textContent = 'Printer BT: Mode Sistem';
+                return;
+            }
+            try {
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+                });
+                const server = await device.gatt.connect();
+                const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+                state.btCharacteristic = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+                state.btDeviceName = device.name || 'POS-58BT';
+                if (statusText) statusText.textContent = `BT: ${state.btDeviceName}`;
+                playTone('success');
+            } catch (err) {
+                console.log('Koneksi Web Bluetooth dibatalkan/tidak tersedia:', err);
+            }
+        }
+
+        async function triggerThermalPrint(manualTrigger = false) {
+            const titleEl = document.getElementById('print-status-title');
+            const descEl = document.getElementById('print-status-desc');
+            const spinnerEl = document.getElementById('print-spinner');
+
+            if (titleEl) titleEl.textContent = 'Mencetak Bukti Pilih ke Printer Mini Bluetooth...';
+            if (descEl) descEl.textContent = 'Mengirim perintah ESC/POS 58mm otomatis';
+            if (spinnerEl) {
+                spinnerEl.className = 'w-8 h-8 rounded-full bg-pilkades-100 text-pilkades-700 flex items-center justify-center animate-spin';
+                spinnerEl.innerHTML = '<i class="fa-solid fa-gear"></i>';
+            }
+
+            // Jika printer Web Bluetooth aktif, kirim teks ESC/POS langsung
+            if (state.btCharacteristic) {
+                try {
+                    const encoder = new TextEncoder();
+                    const receiptText =
+                        '\x1B\x40' +
+                        'PANITIA PILKADES KARANG MUKTI\n' +
+                        'Kec. Cipeundeuy, Kab. Subang\n' +
+                        '--------------------------------\n' +
+                        'STATUS : SUARA SAH TERCATAT\n' +
+                        document.getElementById('receipt-choice-label').textContent + '\n' +
+                        '--------------------------------\n\n\n';
+                    await state.btCharacteristic.writeValue(encoder.encode(receiptText));
+                } catch (e) {
+                    console.warn('Gagal kirim ESC/POS BT:', e);
+                }
+            }
+
+            setTimeout(() => {
+                if (titleEl) titleEl.textContent = 'Bukti Pilih Berhasil Dicetak!';
+                if (descEl) descEl.textContent = 'Silakan ambil struk bukti dan lanjut ke pemilih berikutnya.';
+                if (spinnerEl) {
+                    spinnerEl.className = 'w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center';
+                    spinnerEl.innerHTML = '<i class="fa-solid fa-check"></i>';
+                }
+                if (manualTrigger) {
+                    window.print();
+                }
+            }, 1400);
+        }
+
+        function finishAndNextVoter() {
+            playTone('tap');
+            state.currentInput = '';
+            state.activeVoterId = '';
+            state.selectedCandidate = null;
+            updateInputDisplay();
+            hideLoginAlert();
+            switchScreen('screen-login');
+        }
+
+        /* ---------------------------------------------------------------------
+           7. PANEL PANITIA KPPS, PENYIMPANAN SUARA & INISIALISASI HALAMAN
+           --------------------------------------------------------------------- */
+        const STORAGE_VOTES_KEY = 'pilkades_karang_mukti_votes_v1';
+
+        function loadElectionTallies() {
+            try {
+                const raw = localStorage.getItem(STORAGE_VOTES_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    state.votes = parsed.votes || { 1: 0, 2: 0 };
+                    state.usedVoters = new Set(parsed.usedVoters || []);
+                }
+            } catch (e) {}
+        }
+
+        function saveElectionTallies() {
+            try {
+                localStorage.setItem(
+                    STORAGE_VOTES_KEY,
+                    JSON.stringify({
+                        votes: state.votes,
+                        usedVoters: Array.from(state.usedVoters)
+                    })
+                );
+            } catch (e) {}
+        }
+
+        function updateCommitteeDashboard() {
+            const v1 = state.votes[1] || 0;
+            const v2 = state.votes[2] || 0;
+            const total = v1 + v2;
+            const pct1 = total > 0 ? ((v1 / total) * 100).toFixed(1) : '0';
+            const pct2 = total > 0 ? ((v2 / total) * 100).toFixed(1) : '0';
+
+            document.getElementById('admin-total-votes').textContent = total;
+            document.getElementById('admin-votes-1').textContent = v1;
+            document.getElementById('admin-pct-1').textContent = `${pct1}%`;
+            document.getElementById('admin-votes-2').textContent = v2;
+            document.getElementById('admin-pct-2').textContent = `${pct2}%`;
+        }
+
+        function openCommitteeModal() {
+            playTone('tap');
+            applyCandidatePhotosToUI();
+            updatePhotoLockUI();
+            updateCommitteeDashboard();
+            document.getElementById('modal-committee').classList.remove('hidden');
+        }
+
+        function closeCommitteeModal() {
+            playTone('tap');
+            document.getElementById('modal-committee').classList.add('hidden');
+        }
+
+        function resetAllElectionData() {
+            playTone('tap');
+            // Hanya mereset data suara & daftar NIK simulasi; foto kandidat yang terkunci tetap permanen!
+            state.votes = { 1: 0, 2: 0 };
+            state.usedVoters.clear();
+            localStorage.removeItem(STORAGE_VOTES_KEY);
+            updateCommitteeDashboard();
+            playTone('success');
+        }
+
+        function startLiveClock() {
+            const clockEl = document.getElementById('live-clock');
+            const tick = () => {
+                if (!clockEl) return;
+                const now = new Date();
+                const pad = (n) => String(n).padStart(2, '0');
+                clockEl.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} WIB`;
+            };
+            tick();
+            setInterval(tick, 1000);
+        }
+
+        // Dukungan keyboard fisik/Bluetooth selain layar sentuh
+        document.addEventListener('keydown', (e) => {
+            const loginVisible = !document.getElementById('screen-login').classList.contains('hidden');
+            const modalHidden =
+                document.getElementById('modal-confirm').classList.contains('hidden') &&
+                document.getElementById('modal-committee').classList.contains('hidden');
+
+            if (loginVisible && modalHidden) {
+                if (e.key >= '0' && e.key <= '9') {
+                    pressKey(e.key);
+                } else if (e.key === 'Backspace') {
+                    backspaceKey();
+                } else if (e.key === 'Enter') {
+                    enterVotingBooth();
+                }
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadElectionTallies();
+            loadOrGeneratePermanentPortraits();
+            updateInputDisplay();
+            startLiveClock();
+        });
+    </script>
+</body>
+</html>
